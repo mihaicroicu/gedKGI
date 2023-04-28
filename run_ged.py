@@ -80,6 +80,8 @@ def make_run(row):
 
 if __name__ == "__main__":
 
+    dyad = 828
+
     adm1 = ADMShapes("storage/afr_adm1.gpkg")
     cshp = ADMShapes("storage/afr_cntry.gpkg")
 
@@ -87,5 +89,23 @@ if __name__ == "__main__":
     ged = ged[['id','dyad_new_id','best','latitude','longitude','month_id','where_prec','priogrid_gid']]
 
     train = ged[ged.where_prec <= 3]
+    test_q = ged[ged.where_prec.isin(4,6)]
     ged_test_4 = ged[ged.where_prec == 4]
     ged_test_6 = ged[ged.where_prec == 6]
+
+
+    dyad_todo_list = test_q[['dyad_new_id','month_id']].drop_duplicates().reset_index(drop=True).\
+        sort_values(by=['dyad_new_id','month_id'])
+
+    test_q = None
+
+    if dyad is not None:
+        dyad = int(dyad)
+        print (f"Only doing dyads larger than : {dyad}")
+        dyad_todo_list = dyad_todo_list[dyad_todo_list.dyad_new_id==dyad]
+
+    train = ged[ged.where_prec <= 3]
+    ged_test_4 = ged[ged.where_prec == 4]
+    ged_test_6 = ged[ged.where_prec == 6]
+
+
