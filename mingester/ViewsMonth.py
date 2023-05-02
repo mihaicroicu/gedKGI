@@ -1,5 +1,6 @@
 from datetime import datetime, date, timedelta
 
+
 class ViewsMonth(object):
 
     def __init__(self, id):
@@ -13,6 +14,24 @@ class ViewsMonth(object):
 
     def __str__(self):
         return f'ViewsMonth(id={self.id}) #=> year:{self.year}, month:{self.month}'
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return self.id != other.id
+
+    def __lt__(self, other):
+        return self.id < other.id
+
+    def __le__(self, other):
+        return self.id <= other.id
+
+    def __ge__(self, other):
+        return self.id >= other.id
+
+    def __gt__(self, other):
+        return self.id > other.id
 
     @classmethod
     def id2month(cls, id):
@@ -68,6 +87,8 @@ class ViewsMonth(object):
         Returns the ISO (YYYY-MM-DD) representation of the end date of a ViEWS Month
         :return: End date in ISO format
         """
-        #Start from
-        end_date = (date(self.year, self.month, 28)+timedelta(5)).replace(day=1)-timedelta(1)
+        # Start from
+        end_date = (date(self.year, self.month, 28) + timedelta(5)).replace(day=1) - timedelta(1)
         return datetime.strftime(end_date, '%Y-%m-%d')
+
+

@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 
 from gedAPI import GedLoader
-from ingester3.ViewsMonth import ViewsMonth
+from mingester.ViewsMonth import ViewsMonth
 from typing import Union
 
 

@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from ingester3.extensions import *
+from mingester.extensions import *
 from diskcache import Cache
 from pathlib import Path
 

@@ -87,8 +87,8 @@ class KGIPoint:
         self.lat = lat
         self.lon = lon
         self.where_prec = where_prec
-        self.shapes = ADMShapes('storage/afr_adm1.gpkg') if adm is None and where_prec==4 else adm
-        self.shapes = ADMShapes('storage/afr_cntry.gpkg') if adm is None and where_prec==6 else self.shapes
+        self.shapes = ADMShapes('storage/adm1.gpkg') if adm is None and where_prec == 4 else adm
+        self.shapes = ADMShapes('storage/cntry.gpkg') if adm is None and where_prec == 6 else self.shapes
 
     #@cache.memoize(typed=True, expire=None, tag="eshape")
     @staticmethod
@@ -101,7 +101,9 @@ class KGIPoint:
         Extracts a shapely polygon for a given lat/lon WGS84 coordinate points.
         """
         shapes = shp_gdf.copy()
+        #print(shapes.COUNTRY.unique()); exit(1)
         polygon = shapes[shapes.intersects(Point(lon,lat))].reset_index()
+        #print (f"XPOLY {polygon}")
         
         if polygon.shape[0]>=1:
             return polygon.geometry[0]
@@ -150,13 +152,15 @@ class KGIPoint:
         Creates a clipped mesh (fishnet) to the shape of the polygon
         returns : returns a clipped GeoDataFrame containing only the clipped mesh.
         """
+        #print(kgi, 0000)
+        #print(kgi.X)
         if kgi is None or kgi.X.shape[0] == 0:
             logging.warning("No training data or no KGI conflict mesh! Proceeding without training (doing random assignment).")
             dfx = self.empty_mesh()
         else:    
             #print('Right')
             dfx = kgi.predict_gdf()
-        #print(self.polygon)
+        #print("POLY", self.polygon)
         poly = gpd.GeoDataFrame(index=[0], crs='epsg:4326', geometry=[self.polygon])
         sampling_run = gpd.sjoin(dfx, poly, how='inner', predicate='intersects')
         try:
