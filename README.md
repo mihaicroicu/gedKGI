@@ -1,6 +1,6 @@
 # viewsKGI
 
-This is the KGI Gaussian Point imputation package used for creating a MSI multiple imputted dataset of UCDP GED based on Croicu (2023) and ingesting the resulting dataset in VIEWS3. There are two versions of the codebase, one for local use on a standard machine, and one for use on the Uppmax (rackham) cluster. 
+This is the KGI Gaussian Point imputation package used for creating a MSI multiple imputted dataset of UCDP GED based on Croicu (2025). There are two versions of the codebase, one for local use on a standard machine, and one for use on the Uppmax (rackham) cluster. 
 
 The regular version of viewsKGI will **not** work on Uppmax: the regular version depends on real-time API calls to UCDP, on the client-server nature of ingester3 and on a local cache buffer to speed client-server interactions and preempt some repeated compute operations. These **do not** function in a highly parallelized, high concurrency, batched environment like Uppmax, and will result in the script crashing in the best of cases, and ingester3 / UCDP API exposed to what is effectively a DDOS attack in the worst of cases (there are mechanisms in the cache cascade crashing the scripts before a DDOS will happen, but don't rely on this). In short **Don't do it**.
 
@@ -10,11 +10,12 @@ Thusly, the two branches should *never* be merged, both are their own main.
 
 # When to use Uppmax
 
-To prepare and ingest a full GED version it is not practical to use a regular machine, a cluster is a good idea, as it takes ~450-500 core-hours on CPU and about 50-100 hours on a GPU. A monthly update is feasable on a regular machine, taking about 2 hours on an M1 TPU-equipped machine running Tensorflow on the Metal GPU/TPU.
+To prepare a full GED version it is not practical to use a regular machine, a cluster is a good idea, as it takes ~450-500 core-hours on CPU and about 50-100 hours on a GPU. A monthly update is feasable on a regular machine, taking about 2 hours on an M1 TPU-equipped machine running Tensorflow on the Metal GPU/TPU.
 
 ## How to use it locally
 
-The whole system is exposed through a command line application called `run_ged`. Running `python run_ged.py --help` will give you some help on how the process works. In short, the following flags exist:
+The whole system is exposed through two command line applications, a command line application called `run2.py` which requries you to supply your own data and `run_ged.py` which fetches GED from the database. 
+Running `python run_ged.py --help` will give you some help on how the process works. In short, the following flags exist:
 
 `--month_id xxx` - Run for month_id xxx. If not specified, run for the latest month_id that has data in the UCDP Candidate API.
 `--dyad_id xxx` - Run for only this dyad_id. If not specified, run for all dyads in given month_id
