@@ -1,8 +1,8 @@
-# viewsKGI
+# gedKGI
 
 This is the KGI Gaussian Point imputation package used for creating a MSI multiple imputted dataset of UCDP GED based on Croicu (2025). There are two versions of the codebase, one for local use on a standard machine, and one for use on the Uppmax (rackham) cluster. 
 
-The regular version of viewsKGI will **not** work on Uppmax: the regular version depends on real-time API calls to UCDP, on the client-server nature of ingester3 and on a local cache buffer to speed client-server interactions and preempt some repeated compute operations. These **do not** function in a highly parallelized, high concurrency, batched environment like Uppmax, and will result in the script crashing in the best of cases, and ingester3 / UCDP API exposed to what is effectively a DDOS attack in the worst of cases (there are mechanisms in the cache cascade crashing the scripts before a DDOS will happen, but don't rely on this). In short **Don't do it**.
+The regular version of gedKGI will **not** work on Uppmax: the regular version depends on real-time API calls to UCDP, on the client-server nature of ingester3 and on a local cache buffer to speed client-server interactions and preempt some repeated compute operations. These **do not** function in a highly parallelized, high concurrency, batched environment like Uppmax, and will result in the script crashing in the best of cases, and ingester3 / UCDP API exposed to what is effectively a DDOS attack in the worst of cases (there are mechanisms in the cache cascade crashing the scripts before a DDOS will happen, but don't rely on this). In short **Don't do it**.
 
 The Uppmax version is adapted for batch processing, separating out the parallel high concurrency work in separate scripts. Also, reliance on the ingester3 mechanisms, which are not built to scale to 5000+ concurrent calls, was eliminated completely, with a stand-alone minimal local reimplementation of the ingester3 API called "mingester". Mingester's API subset is compatible with the 1.9 branch of ingester3, but it is not under parallel development. 
 
@@ -29,8 +29,8 @@ The script is smart enough to fetch the correct datasets from UCDP and collate t
 
 The procedure is slightly involved due to the batched nature of Uppmax, but the steps are simple enough.
 
-1. Download the `uppmax` branch of the repo. I will assume you have it in  `~/viewsKGI/`
-2. Set up a symlink to the project directory containing the data storage required for KGI (i.e. the GADM geopackage(s)). These currently live at `/proj/uppstore2019113/mihai`. This means you should do `ln -s /proj/uppstore2019113/mihai ~/viewsKGI/storage`
+1. Download the `uppmax` branch of the repo. I will assume you have it in  `~/gedKGI/`
+2. Set up a symlink to the project directory containing the data storage required for KGI (i.e. the GADM geopackage(s)). These currently live at `/proj/uppstore2019113/mihai`. This means you should do `ln -s /proj/uppstore2019113/mihai ~/gedKGI/storage`
 3. Install the `conda` module and the `gpp` environment.
 4. Ask for a four hour single core interactive session. This is not techically needed, but it is good form, since you will run the data fetcher, which is a resource intensive session: `interactive -A snic2022-5-587 -n 1 -t 4:00:00`
 5. After the interactive session started, activate the gpp environment with `conda activate gpp`.
